@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-b
+  namespace: observability-demo
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: service-b
+  template:
+    metadata:
+      labels:
+        app: service-b
+    spec:
+      containers:
+        - name: service-b
+          image: nginx:1.27
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: nginx-config
+              mountPath: /usr/share/nginx/html/index.html
+              subPath: index.html
+      volumes:
+        - name: nginx-config
+          configMap:
+            name: service-b-config
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: service-b-config
+  namespace: observability-demo
+data:
+  index.html: |
+    <html>
+      <body>
+        <h1>Hello from Service B</h1>
+        <p>Request reached the final microservice.</p>
+      </body>
+    </html>

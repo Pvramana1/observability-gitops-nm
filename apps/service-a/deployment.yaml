@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-a
+  namespace: observability-demo
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: service-a
+  template:
+    metadata:
+      labels:
+        app: service-a
+    spec:
+      containers:
+        - name: service-a
+          image: nginx:1.27
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: nginx-config
+              mountPath: /etc/nginx/conf.d/default.conf
+              subPath: default.conf
+      volumes:
+        - name: nginx-config
+          configMap:
+            name: service-a-config
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: service-a-config
+  namespace: observability-demo
+data:
+  default.conf: |
+    server {
+        listen 80;
+        location / {
+            proxy_pass http://service-b;
+        }
+    }
