@@ -15,28 +15,6 @@ spec:
     spec:
       containers:
         - name: service-a
-          image: nginx:1.27
+          image: asia-south1-docker.pkg.dev/project-61ebbdbd-73fb-43b8-93a/observability-repo/service-a:1.0
           ports:
-            - containerPort: 80
-          volumeMounts:
-            - name: nginx-config
-              mountPath: /etc/nginx/conf.d/default.conf
-              subPath: default.conf
-      volumes:
-        - name: nginx-config
-          configMap:
-            name: service-a-config
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: service-a-config
-  namespace: observability-demo
-data:
-  default.conf: |
-    server {
-        listen 80;
-        location / {
-            proxy_pass http://service-b;
-        }
-    }
+            - containerPort: 8080

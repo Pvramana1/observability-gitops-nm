@@ -15,28 +15,6 @@ spec:
     spec:
       containers:
         - name: service-b
-          image: nginx:1.27
+          image: asia-south1-docker.pkg.dev/project-61ebbdbd-73fb-43b8-93a/observability-repo/service-b:1.0
           ports:
-            - containerPort: 80
-          volumeMounts:
-            - name: nginx-config
-              mountPath: /usr/share/nginx/html/index.html
-              subPath: index.html
-      volumes:
-        - name: nginx-config
-          configMap:
-            name: service-b-config
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: service-b-config
-  namespace: observability-demo
-data:
-  index.html: |
-    <html>
-      <body>
-        <h1>Hello from Service B</h1>
-        <p>Request reached the final microservice.</p>
-      </body>
-    </html>
+            - containerPort: 8080
